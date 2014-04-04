@@ -271,8 +271,8 @@ function UnitPieceLight.ViewResize(vsx, vsy)
     border = false,
     min_filter = GL.LINEAR,
     mag_filter = GL.LINEAR,
-    wrap_s = GL.CLAMP,
-    wrap_t = GL.CLAMP,
+    wrap_s = GL.CLAMP_TO_BORDER,
+    wrap_t = GL.CLAMP_TO_BORDER,
     fbo = true,
   })
 
@@ -280,8 +280,8 @@ function UnitPieceLight.ViewResize(vsx, vsy)
     border = false,
     min_filter = GL.LINEAR,
     mag_filter = GL.LINEAR,
-    wrap_s = GL.CLAMP,
-    wrap_t = GL.CLAMP,
+    wrap_s = GL.CLAMP_TO_BORDER,
+    wrap_t = GL.CLAMP_TO_BORDER,
     fbo = true,
   })
 
@@ -289,8 +289,8 @@ function UnitPieceLight.ViewResize(vsx, vsy)
     border = false,
     min_filter = GL.LINEAR,
     mag_filter = GL.LINEAR,
-    wrap_s = GL.CLAMP,
-    wrap_t = GL.CLAMP,
+    wrap_s = GL.CLAMP_TO_BORDER,
+    wrap_t = GL.CLAMP_TO_BORDER,
     fbo = true,
   })
 
@@ -298,8 +298,8 @@ function UnitPieceLight.ViewResize(vsx, vsy)
     border = false,
     min_filter = GL.LINEAR,
     mag_filter = GL.LINEAR,
-    wrap_s = GL.CLAMP,
-    wrap_t = GL.CLAMP,
+    wrap_s = GL.CLAMP_TO_BORDER,
+    wrap_t = GL.CLAMP_TO_BORDER,
     fbo = true,
   })
 end
