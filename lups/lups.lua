@@ -115,12 +115,10 @@ local GL_VERSION  = 0x1F02
 local glVendor   = gl.GetString(GL_VENDOR)
 local glRenderer = (gl.GetString(GL_RENDERER)):lower()
 
-isNvidia  = (vendor:find("NVIDIA"))
-isATI     = (vendor:find("ATI "))
-isMS      = (vendor:find("Microsoft"))
-isIntel   = (vendor:find("Intel"))
-NVseries  = false
-ATIseries = false
+isNvidia  = (glVendor:find("NVIDIA"))
+isATI     = (glVendor:find("ATI "))
+isMS      = (glVendor:find("Microsoft"))
+isIntel   = (glVendor:find("Intel"))
 canCTT    = (gl.CopyToTexture    ~= nil)
 canFBO    = (gl.DeleteTextureFBO ~= nil)
 canRTT    = (gl.RenderToTexture  ~= nil)
