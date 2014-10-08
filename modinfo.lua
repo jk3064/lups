@@ -2,6 +2,6 @@
 return {
 	name='LUPS',
 	description="LUa Particle System",
-	version='1.1',
+	version='$VERSION',
 	modtype=0,
 }
