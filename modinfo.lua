@@ -1,7 +1,7 @@
 
 return {
-	name='LUPS',
-	description="LUa Particle System",
-	version='$VERSION',
-	modtype=0,
+	name        = 'LUPS';
+	description = "LUa Particle System";
+	version     = '$VERSION';
+	modtype     = 0;
 }
