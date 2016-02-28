@@ -264,87 +264,85 @@ local factionsNanoFx = {
 local builders = {}
 
 	function gadget:GameFrame(frame)
-		if ((unitID + frame) % 30 >= 1) then --// only update once per second
-			return
-		end
-
 		for i=1,#builders do
 			local unitID = builders[i]
+                        
+			if ((unitID + frame) % 30 < 1) then --// only update once per second
+				local strength = Spring.GetUnitCurrentBuildPower(unitID) or 0	-- * 16
+				if (strength > 0) then
+					local type, target, isFeature = Spring.Utilities.GetUnitNanoTarget(unitID)
 
-			local strength = Spring.GetUnitCurrentBuildPower(unitID) or 0	-- * 16
-			if (strength > 0) then
-				local type, target, isFeature = Spring.Utilities.GetUnitNanoTarget(unitID)
+					if (target) then
+						local endpos
+						local radius = 30
+						if (type=="restore") then
+							endpos = target
+							radius = target[4]
+							target = -1
+						elseif (not isFeature) then
+							radius = (GetUnitRadius(target) or 1) * 0.80
+						else
+							radius = (GetFeatureRadius(target) or 1) * 0.80
+						end
 
-				if (target) then
-					local endpos
-					local radius = 30
-					if (type=="restore") then
-						endpos = target
-						radius = target[4]
-						target = -1
-					elseif (not isFeature) then
-						radius = (GetUnitRadius(target) or 1) * 0.80
-					else
-						radius = (GetFeatureRadius(target) or 1) * 0.80
-					end
+						local terraform = false
+						local inversed  = false
+						if (type=="restore") then
+							terraform = true
+						elseif (type=="reclaim") then
+							inversed  = true
+						end
 
-					local terraform = false
-					local inversed  = false
-					if (type=="restore") then
-						terraform = true
-					elseif (type=="reclaim") then
-						inversed  = true
-					end
+						--[[
+						if (type=="reclaim") and (strength > 0) then
+							--// reclaim is done always at full speed
+							strength = 1
+						end
+						]]--
 
-					--[[
-					if (type=="reclaim") and (strength > 0) then
-						--// reclaim is done always at full speed
-						strength = 1
-					end
-					]]--
+						local cmdTag = GetCmdTag(unitID)
+						local teamID = Spring.GetUnitTeam(unitID)
+						local allyID = Spring.GetUnitAllyTeam(unitID)
+						local unitDefID = Spring.GetUnitDefID(unitID)
+						local faction = GetFaction(unitDefID)
+						local teamColor = {Spring.GetTeamColor(teamID)}
+						local nanoPieces = Spring.GetUnitNanoPieces(unitID) or {}
 
-					local cmdTag = GetCmdTag(unitID)
-					local teamID = Spring.GetUnitTeam(unitID)
-					local allyID = Spring.GetUnitAllyTeam(unitID)
-					local unitDefID = Spring.GetUnitDefID(unitID)
-					local faction = GetFaction(unitDefID)
-					local teamColor = {Spring.GetTeamColor(teamID)}
-					local nanoPieces = Spring.GetUnitNanoPieces(unitID) or {}
+						for j=1,#nanoPieces do
+							local nanoPieceID = nanoPieces[j]
+							--local nanoPieceIDAlt = Spring.GetUnitScriptPiece(unitID, nanoPieceID)
+							--if (unitID+frame)%60 == 0 then
+							--	Spring.Echo("Nanopiece nums (output)", j, UnitDefs[unitDefID].name, nanoPieceID, nanoPieceIDAlt)
+							--end
 
-					for j=1,#nanoPieces do
-						local nanoPieceID = nanoPieces[j]
-						--local nanoPieceIDAlt = Spring.GetUnitScriptPiece(unitID, nanoPieceID)
-						--if (unitID+frame)%60 == 0 then
-						--	Spring.Echo("Nanopiece nums (output)", j, UnitDefs[unitDefID].name, nanoPieceID, nanoPieceIDAlt)
-						--end
+							local nanoParams = {
+								targetID     = target,
+								isFeature    = isFeature,
+								unitpiece    = nanoPieceID,
+								unitID       = unitID,
+								unitDefID    = unitDefID,
+								teamID       = teamID,
+								allyID       = allyID,
+								nanopiece    = nanoPieceID,
+								targetpos    = endpos,
+								count        = strength * 30,
+								color        = teamColor,
+								type         = type,
+								targetradius = radius,
+								terraform    = terraform,
+								inversed     = inversed,
+								cmdTag       = cmdTag, --//used to end the fx when the command is finished
+								life = 60,
+							}
 
-						local nanoParams = {
-							targetID     = target,
-							isFeature    = isFeature,
-							unitpiece    = nanoPieceID,
-							unitID       = unitID,
-							unitDefID    = unitDefID,
-							teamID       = teamID,
-							allyID       = allyID,
-							nanopiece    = nanoPieceID,
-							targetpos    = endpos,
-							count        = strength * 30,
-							color        = teamColor,
-							type         = type,
-							targetradius = radius,
-							terraform    = terraform,
-							inversed     = inversed,
-							cmdTag       = cmdTag, --//used to end the fx when the command is finished
-							life = 60,
-						}
+							local nanoSettings = CopyMergeTables(factionsNanoFx[faction] or factionsNanoFx.default, nanoParams)
+							ExecuteLuaCode(nanoSettings)
 
-						local nanoSettings = CopyMergeTables(factionsNanoFx[faction] or factionsNanoFx.default, nanoParams)
-						ExecuteLuaCode(nanoSettings)
-
-						local fxType  = nanoSettings.fxtype
-						if (not nanoParticles[unitID]) then nanoParticles[unitID] = {} end
-						local unitFxs = nanoParticles[unitID]
-						unitFxs[#unitFxs+1] = Lups.AddParticles(nanoSettings.fxtype,nanoSettings)
+							local fxType  = nanoSettings.fxtype
+							if (not nanoParticles[unitID]) then nanoParticles[unitID] = {} end
+							local unitFxs = nanoParticles[unitID]
+							unitFxs[#unitFxs+1] = Lups.AddParticles(nanoSettings.fxtype,nanoSettings)
+						end
 					end
 				end
 			end
