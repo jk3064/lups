@@ -13,7 +13,7 @@ function gadget:GetInfo()
 end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-local weapons = include("LuaRules/Configs/lups_projectile_fxs.lua")	--{}
+local weapons = include("LuaRules/Configs/lups_projectile_fxs.lua") or {}
 --[[
 for i=1,#WeaponDefs do
 	local wd = WeaponDefs[i]
@@ -76,7 +76,7 @@ else
 --------------------------------------------------------------------------------
 
 local Lups
-local LupsAddParticles 
+local LupsAddParticles
 local SYNCED = SYNCED
 
 local projectiles = {}
