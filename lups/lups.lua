@@ -64,7 +64,7 @@ if not Script.IsEngineMinVersion(101, 1) then
     
     local function CreateUnitWrapper(origFunc)
         return function(unitID,allyTeam,raw)
-            if (allyTeam < 0) then
+            if ((allyTeam or 0) < 0) then
                 if (raw) then
                     return 0xFFFFFF
                 else
@@ -76,7 +76,7 @@ if not Script.IsEngineMinVersion(101, 1) then
     end
     local function CreatePosWrapper(origFunc)
         return function(x,y,z,allyTeam)
-            if (allyTeam < 0) then return true, true, true, true end
+            if ((allyTeam or 0) < 0) then return true, true, true, true end
             return origFunc(x,y,z)
         end
     end
@@ -214,8 +214,8 @@ thisGameFrame   = 0
 frameOffset     = 0
 LupsConfig      = {}
 
-local spActivateMaterial   = Spring.UnitRendering.ActivateMaterial or function() end
-local spDeactivateMaterial = Spring.UnitRendering.DeactivateMaterial or function() end
+local spActivateMaterial   = (Spring.UnitRendering and Spring.UnitRendering.ActivateMaterial) or function() end
+local spDeactivateMaterial = (Spring.UnitRendering and Spring.UnitRendering.DeactivateMaterial) or function() end
 
 local noDrawUnits = {}
 function SetUnitLuaDraw(unitID,nodraw)
