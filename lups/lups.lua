@@ -55,7 +55,7 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-if not Script.IsEngineMinVersion(101, 1) then
+if not Script.IsEngineMinVersion(101, 1, 0) then
     local origGetUnitLosState     = Spring.GetUnitLosState
     local origGetPositionLosState = Spring.GetPositionLosState
     local origIsPosInLos          = Spring.IsPosInLos
